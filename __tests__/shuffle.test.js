@@ -1,7 +1,7 @@
 const shuffle = require("../src/shuffle");
 
+// CODE HERE
 describe("shuffle should...", () => {
-  // CODE HERE
   test('returns an empty array if input array is empty', () => {
     expect(shuffle([])).toEqual([]);
   })
