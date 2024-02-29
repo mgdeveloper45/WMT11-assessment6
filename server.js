@@ -64,6 +64,7 @@ app.get("/api/robots/shuffled", (req, res) => {
 
   try {
     let shuffled = shuffle(bots);
+    rollbar.info(`bots shuffled ${shuffled}`)
     res.status(200).send(shuffled);
   } catch (error) {
     console.error("ERROR GETTING SHUFFLED BOTS", error);
@@ -85,10 +86,12 @@ app.post("/api/duel", (req, res) => {
     // comparing the total health to determine a winner
     if (compHealth > playerHealth) {
       playerRecord.losses += 1;
+      rollbar.info('you lost')
       res.status(200).send("You lost!");
     } else {
       // playerRecord.losses += 1; // *********** playerRecord should increment WINS not losses ************
       playerRecord.wins += 1; 
+      rollbar.info('you won')
       res.status(200).send("You won!");
     }
   } catch (error) {

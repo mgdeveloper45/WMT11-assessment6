@@ -139,7 +139,7 @@ const duel = () => {
     .querySelectorAll(".bot-btn")
     .forEach((btn) => btn.classList.add("hide"));
   setTimeout(() => {
-    axios.post("url/api/duel", { compDuo, playerDuo }).then(({ data }) => {
+    axios.post("http://localhost:8000/api/duel", { compDuo, playerDuo }).then(({ data }) => {
       resultsText.textContent = data;
       playAgainBtn.classList.remove("hide");
       getPlayerStats();
