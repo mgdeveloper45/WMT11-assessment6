@@ -1,6 +1,16 @@
+require('dotenv').config()
 const express = require("express");
+const cors = require("cors");
 const bots = require("./src/botsData");
 const shuffle = require("./src/shuffle");
+const Rollbar = require("rollbar");
+
+const { ROLLBAR_TOKEN } = process.env
+const rollbar = new Rollbar({
+  accessToken: ROLLBAR_TOKEN,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+})
 
 const playerRecord = {
   wins: 0,
@@ -9,6 +19,8 @@ const playerRecord = {
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+
 app.use(express.static(__dirname + '/public'))
 // Add up the total health of all the robots
 const calculateTotalHealth = (robots) =>
@@ -36,6 +48,8 @@ const calculateHealthAfterAttack = ({ playerDuo, compDuo }) => {
 };
 
 app.get("/api/robots", (req, res) => {
+  rollbar.info("GET request to /api/robots")
+
   try {
     // res.status(200).send(botsArr); // *********** send bots not botsARR ***********
     res.status(200).send(bots); 
@@ -46,6 +60,8 @@ app.get("/api/robots", (req, res) => {
 });
 
 app.get("/api/robots/shuffled", (req, res) => {
+  rollbar.info("GET request to /api/robots/shuffled")
+
   try {
     let shuffled = shuffle(bots);
     res.status(200).send(shuffled);
@@ -56,6 +72,8 @@ app.get("/api/robots/shuffled", (req, res) => {
 });
 
 app.post("/api/duel", (req, res) => {
+  rollbar.info("POST request to /api/duel")
+
   try {
     const { compDuo, playerDuo } = req.body;
 
@@ -80,6 +98,8 @@ app.post("/api/duel", (req, res) => {
 });
 
 app.get("/api/player", (req, res) => {
+  rollbar.info("GET request to /api/player")
+
   try {
     res.status(200).send(playerRecord);
   } catch (error) {
